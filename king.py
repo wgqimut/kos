@@ -10,6 +10,8 @@ from config import TONGUE
 
 
 app = Flask(__name__)
+# app.jinja_env.variable_start_string = '{{ '
+# app.jinja_env.variable_end_string = ' }}'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///{}'.format("kos.db")
 app.config['SQLALCHEMY_ECHO'] = True
 db = SQLAlchemy(app)
@@ -70,7 +72,7 @@ def new_user(username):
 @app.route('/<username>/items/<sentence_id>', methods=['DELETE'])
 def delete_sentence(username, sentence_id):
     from s_database import Sentence
-    need_del_sentence = Sentence.query.filter_by(sentence_id=sentence_id)
+    need_del_sentence = Sentence.query.filter_by(sentence_id=sentence_id).first()
     # need_del_sentence需要转换成对象，这里delete才能成功，因为delete这里需要的是一个对象
     if need_del_sentence:
         db.session.delete(need_del_sentence)
@@ -80,6 +82,22 @@ def delete_sentence(username, sentence_id):
 
     return jsonify(return_message)
 
+
+@app.route('/login', methods=['GET'])
+def login():
+    from s_database import User
+    username = request.args.get('username', '')
+    password = request.args.get('password', '')
+    user_info = User.query.filter_by(user_name=username).first()
+    if user_info:
+        if user_info.password == password:
+            return_message = {"code": True, "message": "login success!"}
+        else:
+            return_message = {"code": False, "message": "Login failed!"}
+    else:
+        return_message = {"code": False, "message": "This user name {} does not exist!!!".format(str(username))}
+
+    return jsonify(return_message)
 
 # def encode_msg(data):】
 #     """
