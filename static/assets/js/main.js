@@ -6,7 +6,7 @@ var kos = {};
 Vue.http.get('http://127.0.0.1:5000/wangguoqing/items')
         .then(function(resp){
 
-            kos.listData = resp.data.map(function (item) {
+            kos.listData = resp.data.sentences.map(function (item) {
                 item.show_en = false;
                 return item;
             });
