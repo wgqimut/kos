@@ -67,13 +67,13 @@ def new_user(username):
         from datetime import datetime
         return_message = ReturnAddInfo()
 
-        if 'chinese' in request.form and 'english' in request.form \
-                and 'create_time' in request.form:
+        if 'chinese' in request.json and 'english' in request.json \
+                and 'create_time' in request.json:
             user_id = Sentence.query.filter_by(user_name=username).first()
             if user_id:
                 user_id = user_id.user_id
-                new_sentence = Sentence(request.form['english'], user_id,
-                                        datetime.utcnow(), request.form['chinese'],
+                new_sentence = Sentence(request.json['english'], user_id,
+                                        datetime.utcnow(), request.json['chinese'],
                                         TONGUE)
                 db.session.add(new_sentence)
                 db.session.commit()
@@ -109,16 +109,18 @@ def delete_sentence(username, sentence_id):
 @app.route('/login', methods=['GET'])
 def login():
     from s_database import User
+    return_message = ReturnInfo()
     username = request.args.get('username', '')
     password = request.args.get('password', '')
     user_info = User.query.filter_by(user_name=username).first()
     if user_info:
         if user_info.password == password:
-            return_message = {"code": True, "message": "login success!"}
+            return_message.code = True
+            return_message.message = "Login success!"
         else:
-            return_message = {"code": False, "message": "Login failed!"}
+            return_message.message = "Login failed!"
     else:
-        return_message = {"code": False, "message": "This user name {} does not exist!!!".format(str(username))}
+        return_message.message = "This user name {} does not exist!!".format(str(username))
 
     return jsonify(return_message)
 
