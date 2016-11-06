@@ -1,22 +1,34 @@
+import logging
 import os
 
 from flask import Flask
-from flask import json
 from flask import request
 from flask import send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 from flask import jsonify
 from config import TONGUE
-
+from attr import attrs, attrib
+import attr
 
 app = Flask(__name__)
 # app.jinja_env.variable_start_string = '{{ '
 # app.jinja_env.variable_end_string = ' }}'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///{}'.format("kos.db")
 app.config['SQLALCHEMY_ECHO'] = True
+app.secret_key = b'\xce+#\xf7\x87g\xfe\r\xd1D\xec3\xce4\x7f\t\t+A]\xdb\xaf!VD\x13\xdb&&3\xe8\xbav\x98oG\xa9\xcd\xc8\x15\xbc\xd4m%[X\xc4\xd2\x1f&\xbd\x1aN\xb0%\x01\x10\xeb\xd0\xb1y\xf9\x96='
 db = SQLAlchemy(app)
 
 root = os.path.join(os.path.dirname(os.path.abspath(__file__)), "templates")
+
+
+@attrs
+class ReturnInfo(object):
+    code = attrib(default=False)
+    message = attrib(default='')
+
+
+class ReturnAddInfo(ReturnInfo):
+    sentence_id = attrib(default=-1)
 
 
 @app.route('/')
@@ -41,30 +53,40 @@ def new_user(username):
             all_sentence = [all_sentence]
 
         return jsonify(user_id=user_id, sentences=
-            [
-                {
-                    "sentence_id": item.sentence_id,
-                    "chinese": item.chinese,
-                    "english": item.english,
-                    "type": item.type,
-                }
-                for item in all_sentence
-                ]
-        )
+        [
+            {
+                "sentence_id": item.sentence_id,
+                "chinese": item.chinese,
+                "english": item.english,
+                "type": item.type,
+            }
+            for item in all_sentence
+            ]
+                       )
     elif request.method == "POST":
         from datetime import datetime
-        if 'chinese' in request.form and 'english' in request.form \
-                and 'user_id' in request.form and 'create_time' in request.form:
-            new_sentence = Sentence(request.form['english'], request.form['user_id'],
-                                    datetime.utcnow(), request.form['chinese'],
-                                    TONGUE)
-            db.session.add(new_sentence)
-            db.session.commit()
-            return_message = {"code": True, "message": "Add success!", "sentence_id": new_sentence.sentence_id}
-        else:
-            return_message = {"code": False, "message": "argument is wrong!", "sentence_id": -1}
+        return_message = ReturnAddInfo()
 
-        return jsonify(return_message)
+        if 'chinese' in request.form and 'english' in request.form \
+                and 'create_time' in request.form:
+            user_id = Sentence.query.filter_by(user_name=username).first()
+            if user_id:
+                user_id = user_id.user_id
+                new_sentence = Sentence(request.form['english'], user_id,
+                                        datetime.utcnow(), request.form['chinese'],
+                                        TONGUE)
+                db.session.add(new_sentence)
+                db.session.commit()
+                return_message.code = True
+                return_message.message = "Add success!"
+                return_message.sentence_id = new_sentence.sentence_id
+            else:
+                return_message.message = "This user name does not exist!"
+
+        else:
+            return_message.message = "argument is wrong!"
+
+        return jsonify(attr.asdict(return_message))
     else:
         return "ERROR!!!"
 
@@ -72,14 +94,15 @@ def new_user(username):
 @app.route('/<username>/items/<sentence_id>', methods=['DELETE'])
 def delete_sentence(username, sentence_id):
     from s_database import Sentence
-    need_del_sentence = Sentence.query.filter_by(sentence_id=sentence_id).first()
-    # need_del_sentence需要转换成对象，这里delete才能成功，因为delete这里需要的是一个对象
-    if need_del_sentence:
-        db.session.delete(need_del_sentence)
-        db.session.commit()
-
-    return_message = {"code": True, "message": "Delete sentence success!"}
-
+    return_message = ReturnInfo()
+    delete_result = Sentence.query.filter_by(sentence_id=sentence_id).delete()
+    db.session.commit()
+    if delete_result:
+        return_message.code = True
+        return_message.message = "Delete sentence success!"
+    else:
+        logging.error("internal db error")
+        return_message.message = "internal db error!"
     return jsonify(return_message)
 
 
