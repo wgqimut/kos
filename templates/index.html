@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>kos</title>
+    <link rel="stylesheet" href="../static/assets/css/main.css">
+    <link rel="stylesheet" href="../static/libs/bootstrap/css/bootstrap.min.css">
+    <!--<link href="//cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap-theme.css" rel="stylesheet">-->
+</head>
+
+<body>
+    <div id="list" class="container pt50">
+        <div v-for="item in listData" class="panel panel-default">
+            <div v-on:click="showEn(item)" class="curp panel-heading" v-text="item.chinese"></div>
+            <div v-show="item.show_en" class="panel-body" v-text="item.english"></div>
+        </div>
+    </div>
+</body>
+
+<script src="../static/libs/vue/vue.min.js"></script>
+<script src="../static/libs/vue-resource/vue-resource.min.js"></script>
+<script src="../static/assets/js/main.js"></script>
+
+</html>
