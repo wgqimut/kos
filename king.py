@@ -103,7 +103,7 @@ def delete_sentence(username, sentence_id):
     else:
         logging.error("internal db error")
         return_message.message = "internal db error!"
-    return jsonify(return_message)
+    return jsonify(attr.asdict(return_message))
 
 
 @app.route('/login', methods=['GET'])
@@ -122,7 +122,7 @@ def login():
     else:
         return_message.message = "This user name {} does not exist!!".format(str(username))
 
-    return jsonify(return_message)
+    return jsonify(attr.asdict(return_message))
 
 # def encode_msg(data):】
 #     """
