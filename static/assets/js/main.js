@@ -63,6 +63,17 @@ new Vue({
         },
         addNew: function () {
             console.log(this.newSentence);
+            var vm = this;
+            var create_time = '2016-11-06 11:11:11';
+            Vue.http.post('http://127.0.0.1:5000/'+ this.logInfo.name +'/items', {
+                    chinese: vm.newSentence.cn,
+                    english: vm.newSentence.en,
+                    create_time: create_time
+            }).then(function (resp) {
+                console.log(resp);
+            }, function (resp) {
+                console.log(resp);
+            })
         }
     }
 });
