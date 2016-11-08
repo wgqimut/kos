@@ -73,6 +73,8 @@ new Vue({
                 console.log(resp);
                 if(resp.data.code){
                     vm.getList();
+                    vm.newSentence.cn = '';
+                    vm.newSentence.en = '';
                 }
             }, function (resp) {
                 console.log(resp);
