@@ -69,7 +69,7 @@ def new_user(username):
 
         if 'chinese' in request.json and 'english' in request.json \
                 and 'create_time' in request.json:
-            user_id = Sentence.query.filter_by(user_name=username).first()
+            user_id = User.query.filter_by(user_name=username).first()
             if user_id:
                 user_id = user_id.user_id
                 new_sentence = Sentence(request.json['english'], user_id,
@@ -152,4 +152,4 @@ def login():
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0', port=8765)
