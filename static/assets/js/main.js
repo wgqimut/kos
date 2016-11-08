@@ -71,6 +71,9 @@ new Vue({
                     create_time: create_time
             }).then(function (resp) {
                 console.log(resp);
+                if(resp.data.code){
+                    vm.getList();
+                }
             }, function (resp) {
                 console.log(resp);
             })
