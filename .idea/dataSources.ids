@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<component name="dataSourceStorage">
-  <data-source name="Sqlite (Xerial) - kos.db" uuid="79cc92b1-3f3e-4b41-90db-5e8dd59f9dcf">
-    <database-info product="" version="" jdbc-version="" driver-name="" driver-version=""/>
-  </data-source>
-</component>
