@@ -62,7 +62,6 @@ new Vue({
             })
         },
         addNew: function () {
-            console.log(this.newSentence);
             var vm = this;
             var create_time = '2016-11-06 11:11:11';
             Vue.http.post('http://127.0.0.1:5000/'+ this.logInfo.name +'/items', {
@@ -79,6 +78,17 @@ new Vue({
             }, function (resp) {
                 console.log(resp);
             })
+        },
+        remove: function (item) {
+            var vm = this;
+            Vue.http.delete('/'+ this.logInfo.name +'/items/' + item.sentence_id)
+                .then(function (resp) {
+                    if(resp.data.code){
+                        vm.getList();
+                    }
+                }, function (resp) {
+                    console.log(resp);
+                })
         }
     }
 });

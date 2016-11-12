@@ -9,3 +9,7 @@
 
 
 #add {  margin-top: 20px;}
+
+
+.fa.fa-trash { color: #dddddd; float: right;}
+.fa.fa-trash:hover { color: #ff6c4c;}
