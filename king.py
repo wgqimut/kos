@@ -27,6 +27,7 @@ class ReturnInfo(object):
     message = attrib(default='')
 
 
+@attrs
 class ReturnAddInfo(ReturnInfo):
     sentence_id = attrib(default=-1)
 
@@ -69,7 +70,7 @@ def new_user(username):
 
         if 'chinese' in request.json and 'english' in request.json \
                 and 'create_time' in request.json:
-            user_id = User.query.filter_by(user_name=username).first()
+            user_id = db.session.query(User).filter_by(user_name=username).first()
             if user_id:
                 user_id = user_id.user_id
                 new_sentence = Sentence(request.json['english'], user_id,
@@ -95,7 +96,7 @@ def new_user(username):
 def delete_sentence(username, sentence_id):
     from s_database import Sentence
     return_message = ReturnInfo()
-    delete_result = Sentence.query.filter_by(sentence_id=sentence_id).delete()
+    delete_result = db.session.query(Sentence).filter_by(sentence_id=sentence_id).delete()
     db.session.commit()
     if delete_result:
         return_message.code = True
@@ -152,4 +153,4 @@ def login():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8765)
+    app.run()
