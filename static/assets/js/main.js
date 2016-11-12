@@ -18,7 +18,9 @@ new Vue({
     },
     created: function () {
         this.checkLoginState();
-        $('#login input[type="text"]').focus();
+        $(document).ready(function () {
+            $('#login input[type="text"]').focus();
+        })
     },
     methods: {
         checkLoginState: function () {
@@ -44,10 +46,11 @@ new Vue({
         },
         logIn: function () {
             var vm = this;
+            
             Vue.http.get('http://127.0.0.1:5000/login', {
                 params: {
                     username: vm.logInfo.name,
-                    password: vm.logInfo.pwd
+                    password: md5(vm.logInfo.pwd)
                 }
             }).then(function (resp) {
                 console.log(resp);
