@@ -14,8 +14,12 @@
 
     <div id="login" v-show="!logged">
         <div>
-            <input v-model="logInfo.name" @keyup.enter="logIn" type="text" placeholder="用户名">
-            <input v-model="logInfo.pwd" @keyup.enter="logIn" type="password" placeholder="密码">
+            <div class="input_wrapper">
+                <input class="" v-model="logInfo.name" @keyup.enter="logIn" type="text" placeholder="用户名">
+            </div>
+            <div class="input_wrapper">
+                <input v-model="logInfo.pwd" @keyup.enter="logIn" type="password" placeholder="密码">
+            </div>
         </div>
     </div>
 

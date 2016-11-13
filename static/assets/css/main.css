@@ -2,14 +2,49 @@
 .border_c {border: 1px solid #cccccc;}
 .pt50 { padding-top: 50px;}
 
-#login {  position: fixed; top: 0;  width: 100%;  height: 100%; background: #eeeeee; z-index: 10;}
-#login>div {  position: absolute;  top: 40%;  text-align: center;  width: 100%;  }
-#login input { padding-left: 5px;}
-#login input[type="password"] { margin-left: 12px;}
+html {
+    background-image: url('../images/3.jpg');
+    height: 100%;background-size: cover;
+    background-position: center;}
+body {
+    background: transparent !important;
+    height: 100%;
+}
+#login {  position: fixed; top: 0;  width: 100%;  height: 100%; background: #eeeeee; z-index: 10;
+    background-image: url('../images/2.jpg');
+    background-position: center;
+    background-size: cover;}
+#login>div {  position: absolute;   text-align: center;  width: 100%;  }
+#login .input_wrapper { margin-bottom: 12px;}
+#login input { padding-left: 5px; border: 1px solid rgba(0,0,0,.04);  background: rgba(0,0,0,.085) !important; outline-width: 0;}
+#login input:-webkit-autofill { background: rgba(0,0,0,.075) !important;
+    color: #dddddd;}
 
-
-#add {  margin-top: 20px;}
+#add {  padding-top: 20px;}
 
 
 .fa.fa-trash { color: #dddddd; float: right;}
 .fa.fa-trash:hover { color: #ff6c4c;}
+
+
+@media (min-width: 400px) {
+    #login>div {  bottom: 14%;}
+    #login .input_wrapper:last-child {
+        margin-left: 20px;}
+
+    .input_wrapper {
+        display: inline-block;
+    }
+}
+
+@media (max-width: 399px) {
+  #login>div { bottom: 10%;}
+}
+
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    transition: background-color 5000s ease-in-out 0s;
+}
